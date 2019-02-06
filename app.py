@@ -9,98 +9,70 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-df = json_collect.monthly_data_df
+avaiable_df = []
 
-available_indicators = df['Indicador'].unique()
-
-# df = df[df["Indicador"] == "IGP-DI"]
+for key in json_collect.df_list:
+    avaiable_df.append(key)
 
 app.layout = html.Div([
+    dcc.RadioItems(
+        id='df-type',
+        options=[{'label': i, 'value': i} for i in avaiable_df],
+        labelStyle={'display': 'inline-block'}
+    ),
+
     html.Div([
         dcc.Dropdown(
             id='xaxis-column',
-            options=[{'label': i, 'value': i}
-                     for i in available_indicators],
-            value='IGP-ID'
-        )
-    ], style={'width': '48%', 'display': 'inline-block'}),
+            options=[]
+
+    )], style={'width': '48%', 'display': 'inline-block'}),
+    
+    html.Div([
+        dcc.Dropdown(
+            id='yaxis-column',
+            options=[]
+    )], style={'width': '48%', 'display': 'inline-block'}),
+    
 
     dcc.Graph(id='indicator-graphic')
-    # dcc.Graph(id='example-graph',
-    #         figure={
-    #             'data': [go.Scatter(x=df['DataReferencia'], y=df['Media'], mode='markers',
-    #                                 marker={
-    #                                     'size': 15,
-    #                                     'opacity': 0.5,
-    #                                     'line': {'width': 0.5, 'color': 'white'}
-    #                                 })],
-    #             'layout': {'title': 'Regression Data Example in Plotly'}})
 ])
 
 
 @app.callback(
+    dash.dependencies.Output('xaxis-column', 'options'),
+    [dash.dependencies.Input('df-type', 'value')])
+def callback_a(dropdown_value):
+    return [{'label': i, 'value': i} for i in json_collect.df_list[dropdown_value]["Indicador"].unique()]
+
+@app.callback(
+    dash.dependencies.Output('yaxis-column', 'options'),
+    [dash.dependencies.Input('df-type', 'value')])
+def callback_b(dropdown_value):
+    return [{'label': i, 'value': i} for i in json_collect.df_list[dropdown_value]["DataReferencia"].unique()]
+
+@app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
-    [dash.dependencies.Input('xaxis-column', 'value')])
-def update_graph(xaxis_column_name):
-    dff = json_collect.monthly_data_df[json_collect.monthly_data_df["Indicador"]
-                                       == xaxis_column_name]
+    [dash.dependencies.Input('xaxis-column', 'value'),
+     dash.dependencies.Input('yaxis-column', 'value'),
+     dash.dependencies.Input('df-type', 'value')])
+def update_graph(xaxis_column_name, yaxis_column_name, df_name):
+    dff = json_collect.df_list[df_name]
+    dff = dff[dff["Indicador"] == xaxis_column_name]
 
     return {
         'data': [go.Scatter(
-            x=dff['DataReferencia'],
-            y=dff['Maximo'],
+            x=dff[dff['DataReferencia'] == yaxis_column_name]['Data'],
+            y=dff[dff['DataReferencia'] == yaxis_column_name]['Media'],
             text=dff['Indicador'],
-            mode='markers',
-            name='Maximo',
-            marker={
-                'size': 15,
-                'opacity': 0.5,
-                'line': {'width': 0.5, 'color': 'white'}
-            }
-        ),
-            go.Scatter(
-            x=dff['DataReferencia'],
-            y=dff['Minimo'],
-            text=dff['Indicador'],
-            mode='markers',
-            name='Minimo',
-            marker={
-                'size': 15,
-                'opacity': 0.5,
-                'line': {'width': 0.5, 'color': 'white'}
-            }
-        ),
-            go.Scatter(
-            x=dff['DataReferencia'],
-            y=dff['Media'],
-            text=dff['Indicador'],
-            mode='markers',
             name='Média',
             marker={
                 'size': 15,
                 'opacity': 0.5,
-                'line': {'width': 0.5, 'color': 'white'}
+                'line': {'width': 3, 'color': 'white'}
             }
         )]
     }
 
-
-# app.layout = html.Div(children=[
-#     html.H1(children='Hello Dash'),
-
-#     html.Div(children='''
-#         Dash: A web application framework for Python.
-#     '''),
-
-#     dcc.Graph(id='example-graph',
-#         figure={
-#             'data': [go.Scatter(x=df['DataReferencia'], y=df['Media'], mode='markers',
-#                                 marker={
-#                                     'size': 15,
-#                                     'opacity': 0.5,
-#                                     'line': {'width': 0.5, 'color': 'white'}
-#                                 })],
-#             'layout': {'title': 'Regression Data Example in Plotly'}})
-# ])
 if __name__ == '__main__':
     app.run_server(debug=True)
