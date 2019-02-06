@@ -3,6 +3,7 @@ import dash
 import json_collect
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objs as go
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -12,53 +13,80 @@ df = json_collect.monthly_data_df
 
 available_indicators = df['Indicador'].unique()
 
+# df = df[df["Indicador"] == "IGP-DI"]
+
 app.layout = html.Div([
     html.Div([
         dcc.Dropdown(
-            id='yaxis-column',
+            id='xaxis-column',
             options=[{'label': i, 'value': i}
                      for i in available_indicators],
-            value='Life expectancy at birth, total (years)'
+            value='IGP-ID'
         )
-    ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
+    ], style={'width': '48%', 'display': 'inline-block'}),
 
     dcc.Graph(id='indicator-graphic')
+    # dcc.Graph(id='example-graph',
+    #         figure={
+    #             'data': [go.Scatter(x=df['DataReferencia'], y=df['Media'], mode='markers',
+    #                                 marker={
+    #                                     'size': 15,
+    #                                     'opacity': 0.5,
+    #                                     'line': {'width': 0.5, 'color': 'white'}
+    #                                 })],
+    #             'layout': {'title': 'Regression Data Example in Plotly'}})
 ])
 
 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
-    [dash.dependencies.Input('yaxis-column', 'value')])
-def update_graph(yaxis_column_name):
-    dff = df
+    [dash.dependencies.Input('xaxis-column', 'value')])
+def update_graph(xaxis_column_name):
+    dff = json_collect.monthly_data_df[json_collect.monthly_data_df["Indicador"]
+                                       == xaxis_column_name]
 
     return {
         'data': [go.Scatter(
-            x=dff[dff['Indicador'] == xaxis_column_name]['Media'],
-            y=dff[dff['Indicador'] == yaxis_column_name]['Media'],
-            text=dff[dff['Indicador'] ==
-                     yaxis_column_name]['Indicador'],
-            mode='markers',
+            x=dff['DataReferencia'],
+            y=dff['Maximo'],
+            text=dff['Indicador'],
+            mode='lines',
             marker={
                 'size': 15,
                 'opacity': 0.5,
                 'line': {'width': 0.5, 'color': 'white'}
             }
-        )],
-        'layout': go.Layout(
-            xaxis={
-                'title': xaxis_column_name,
-                'type': 'linear' if xaxis_type == 'Linear' else 'log'
-            },
-            yaxis={
-                'title': yaxis_column_name,
-                'type': 'linear' if yaxis_type == 'Linear' else 'log'
-            },
-            margin={'l': 40, 'b': 40, 't': 10, 'r': 0},
-            hovermode='closest'
-        )
+        ),
+            go.Scatter(
+            x=dff['DataReferencia'],
+            y=dff['Minimo'],
+            text=dff['Indicador'],
+            mode='lines',
+            marker={
+                'size': 15,
+                'opacity': 0.5,
+                'line': {'width': 0.5, 'color': 'white'}
+            }
+        )]
     }
 
 
+# app.layout = html.Div(children=[
+#     html.H1(children='Hello Dash'),
+
+#     html.Div(children='''
+#         Dash: A web application framework for Python.
+#     '''),
+
+#     dcc.Graph(id='example-graph',
+#         figure={
+#             'data': [go.Scatter(x=df['DataReferencia'], y=df['Media'], mode='markers',
+#                                 marker={
+#                                     'size': 15,
+#                                     'opacity': 0.5,
+#                                     'line': {'width': 0.5, 'color': 'white'}
+#                                 })],
+#             'layout': {'title': 'Regression Data Example in Plotly'}})
+# ])
 if __name__ == '__main__':
     app.run_server(debug=True)

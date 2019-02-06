@@ -29,10 +29,11 @@ twelve_months_data_df = pd.DataFrame.from_dict(
 annual_data_df = pd.DataFrame.from_dict(
     annual_data['value'], orient='columns')
 
+monthly_data_df['DataReferencia'] = pd.to_datetime(monthly_data_df['DataReferencia'], format='%m/%Y')
 
-
-
-
-
-
-
+print(monthly_data_df["DataReferencia"])
+# monthly_data_df.sort_values('DataReferencia')
+# print(monthly_data_df[monthly_data_df["Indicador"] == "IGP-DI"])
+# print(monthly_data_df[monthly_data_df["numeroRespondentes"] == 44])
+# monthly_data_df = monthly_data_df[monthly_data_df["Indicador"] == 'IGP-DI']
+# print(monthly_data_df[monthly_data_df["DataReferencia"] == '01/2019'])
