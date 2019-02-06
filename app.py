@@ -50,7 +50,8 @@ def update_graph(xaxis_column_name):
             x=dff['DataReferencia'],
             y=dff['Maximo'],
             text=dff['Indicador'],
-            mode='lines',
+            mode='markers',
+            name='Maximo',
             marker={
                 'size': 15,
                 'opacity': 0.5,
@@ -61,7 +62,20 @@ def update_graph(xaxis_column_name):
             x=dff['DataReferencia'],
             y=dff['Minimo'],
             text=dff['Indicador'],
-            mode='lines',
+            mode='markers',
+            name='Minimo',
+            marker={
+                'size': 15,
+                'opacity': 0.5,
+                'line': {'width': 0.5, 'color': 'white'}
+            }
+        ),
+            go.Scatter(
+            x=dff['DataReferencia'],
+            y=dff['Media'],
+            text=dff['Indicador'],
+            mode='markers',
+            name='Média',
             marker={
                 'size': 15,
                 'opacity': 0.5,
