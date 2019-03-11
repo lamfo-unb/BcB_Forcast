@@ -49,7 +49,7 @@ def callback_a(dropdown_value):
     dash.dependencies.Output('yaxis-column', 'options'),
     [dash.dependencies.Input('df-type', 'value')])
 def callback_b(dropdown_value):
-    return [{'label': i, 'value': i} for i in json_collect.df_list[dropdown_value]["DataReferencia"].unique()]
+    return [{'label': i, 'value': i} for i in json_collect.df_list[dropdown_value]["Data"].unique()]
 
 @app.callback(
     dash.dependencies.Output('indicator-graphic', 'figure'),
@@ -62,8 +62,8 @@ def update_graph(xaxis_column_name, yaxis_column_name, df_name):
 
     return {
         'data': [go.Scatter(
-            x=dff[dff['DataReferencia'] == yaxis_column_name]['Data'],
-            y=dff[dff['DataReferencia'] == yaxis_column_name]['Media'],
+            x=dff[dff['Data'] == yaxis_column_name]['DataReferencia'],
+            y=dff[dff['Data'] == yaxis_column_name]['Media'],
             text=dff['Indicador'],
             name='Média',
             marker={

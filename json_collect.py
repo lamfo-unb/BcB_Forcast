@@ -15,7 +15,6 @@ with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativ
 with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,IndicadorDetalhe,Data,DataReferencia,Media,Mediana,Minimo,Maximo,numeroRespondentes") as url:
     annual_data = json.loads(url.read().decode())
 
-
 # transforma json para df
 monthly_data_df = pd.DataFrame.from_dict(
     monthly_data['value'], orient='columns')
@@ -31,4 +30,11 @@ annual_data_df = pd.DataFrame.from_dict(
 
 df_list = {"Mensal":monthly_data_df, "Quaternal":quarterly_data_df, "Doze meses":twelve_months_data_df, "Anual":annual_data_df}
 
-# monthly_data_df['DataReferencia'] = pd.to_datetime(monthly_data_df['DataReferencia'], format='%m/%Y')
+# monthly_data_df['DataReferencia'] = pd.to_datetime(
+#     monthly_data_df['DataReferencia'], format='%m/%Y')
+# quarterly_data_df['DataReferencia'] = pd.to_datetime(
+#     quarterly_data_df['DataReferencia'], format='%m/%Y')
+# twelve_months_data_df['DataReferencia'] = pd.to_datetime(
+#     twelve_months_data_df['DataReferencia'], format='%m/%Y')
+# annual_data_df['DataReferencia'] = pd.to_datetime(
+#     annual_data_df['DataReferencia'], format='%m/%Y')
