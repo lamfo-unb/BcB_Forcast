@@ -4,6 +4,7 @@ import json_collect
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
+from datetime import datetime
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -62,7 +63,7 @@ def update_graph(xaxis_column_name, yaxis_column_name, df_name):
 
     return {
         'data': [go.Scatter(
-            x=dff[dff['Data'] == yaxis_column_name]['DataReferencia'],
+            x=sorted(dff[dff['Data'] == yaxis_column_name]['DataReferencia'], key=lambda date: datetime.strptime(date, "%m/%Y")),
             y=dff[dff['Data'] == yaxis_column_name]['Media'],
             text=dff['Indicador'],
             name='Média',
