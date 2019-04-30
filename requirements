@@ -1,5 +1,0 @@
-pip install dash==0.36.0
-pip install dash-html-components==0.13.5
-pip install dash-core-components==0.43.0
-pip install dash-table==3.1.11
-pip install dash-daq==0.1.0

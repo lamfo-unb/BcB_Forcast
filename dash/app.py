@@ -1,14 +1,24 @@
 # -*- coding: utf-8 -*-
 import dash
 import json_collect
+import dash_auth
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from datetime import datetime
 
+# control acess layer
+# VALID_USERNAME_PASSWORD = [
+#     ['lucas', 'gay']
+# ]
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+# auth = dash_auth.BasicAuth(
+#     app,
+#     VALID_USERNAME_PASSWORD
+# )
 
 avaiable_df = []
 
@@ -61,9 +71,11 @@ def update_graph(xaxis_column_name, yaxis_column_name, df_name):
     dff = json_collect.df_list[df_name]
     dff = dff[dff["Indicador"] == xaxis_column_name]
 
+    # if df_name == 'twelve_months_data_df':
     return {
         'data': [go.Scatter(
-            x=sorted(dff[dff['Data'] == yaxis_column_name]['DataReferencia'], key=lambda date: datetime.strptime(date, "%m/%Y")),
+            x=sorted(dff[dff['Data'] == yaxis_column_name]['DataReferencia'],
+                        key=lambda date: datetime.strptime(date, "%m/%Y")),
             y=dff[dff['Data'] == yaxis_column_name]['Media'],
             text=dff['Indicador'],
             name='Média',
@@ -75,5 +87,20 @@ def update_graph(xaxis_column_name, yaxis_column_name, df_name):
         )]
     }
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+    # else
+    #     return {
+    #         'data': [go.Scatter(
+    #             x=sorted(dff[dff['Data'] == yaxis_column_name]['DataReferencia'], key=lambda date: datetime.strptime(date, "%m/%Y")),
+    #             y=dff[dff['Data'] == yaxis_column_name]['Media'],
+    #             text=dff['Indicador'],
+    #             name='Média',
+    #             marker={
+    #                 'size': 15,
+    #                 'opacity': 0.5,
+    #                 'line': {'width': 3, 'color': 'white'}
+    #             }
+    #         )]
+    #     }
+
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
