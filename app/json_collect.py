@@ -6,13 +6,13 @@ from pandas.io.json import json_normalize
 with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Suavizada,baseCalculo,Media,Mediana,Minimo,Maximo,numeroRespondentes") as url:
     twelve_months_data = json.loads(url.read().decode())
     
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativaMercadoMensais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,baseCalculo,Media,Mediana,Minimo,Maximo,numeroRespondentes") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativaMercadoMensais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
     monthly_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana,Minimo,Maximo,numeroRespondentes") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana") as url:
     quarterly_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,IndicadorDetalhe,Data,DataReferencia,baseCalculo,Media,Mediana,Minimo,Maximo,numeroRespondentes") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,IndicadorDetalhe,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
     annual_data = json.loads(url.read().decode())
 
 with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTop5Anuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,tipoCalculo,DataReferencia,Media,Mediana") as url:
@@ -44,14 +44,33 @@ top_5_monthly_df = pd.DataFrame.from_dict(
 
 df_list = {"Mensal":monthly_data_df, "Quaternal":quarterly_data_df, "Doze meses":twelve_months_data_df, "Anual":annual_data_df, "Top 5 anual":top_5_anual_df}
 
+# TOP 5 DATA limpeza e preparo de dados 
 top_5_anual_df['Fonte'] = 'Anual'
 top_5_monthly_df['Fonte'] = 'Mensal'
 
 top_5_data = pd.concat([top_5_anual_df, top_5_monthly_df])
 
 top_5_data.loc[top_5_data[top_5_data['Fonte'] == 'Mensal']['Indicador'].isin(indicadoresInflacao),'Media'] = ((((top_5_data[top_5_data['Fonte'] == 'Mensal']['Media']/100)+1)**12)-1)*100
+top_5_data.loc[top_5_data['Fonte'] == 'Anual','DataReferencia'] = '31/12/'+top_5_data[top_5_data['Fonte'] == 'Anual']['DataReferencia']
+
+top_5_data['DataReferencia'] = pd.to_datetime(top_5_data['DataReferencia'])
 
 top_5_data = top_5_data.reset_index(drop=True)
+
+# DATA EXPECTATIVA MERCADO limpeza e preparo de dados 
+monthly_data_df['Fonte'] = 'Mensal'
+quarterly_data_df['Fonte'] = 'Quaternal'
+annual_data_df['Fonte'] = 'Anual'
+
+expec_data = pd.concat([monthly_data_df, quarterly_data_df, annual_data_df])
+
+#top_5_data.loc[top_5_data[top_5_data['Fonte'] == 'Mensal']['Indicador'].isin(indicadoresInflacao),'Media'] = ((((top_5_data[top_5_data['Fonte'] == 'Mensal']['Media']/100)+1)**12)-1)*100
+expec_data.loc[expec_data['Fonte'] == 'Anual','DataReferencia'] = '31/12/'+expec_data[expec_data['Fonte'] == 'Anual']['DataReferencia']
+
+expec_data['DataReferencia'] = pd.to_datetime(expec_data['DataReferencia'])
+
+expec_data = expec_data.reset_index(drop=True)
+
 indicador = 'IPCA'
 
 # print('Inflação:')
@@ -69,17 +88,21 @@ indicador = 'IPCA'
 # print(annual_data_df[annual_data_df['Indicador']
 #                             == indicador][annual_data_df['Data'] == '2019-04-26'][annual_data_df['baseCalculo'] == 0].sort_values(by=['DataReferencia']))
 
-print('Top 5:')
-print('Anual:')
-print(top_5_anual_df[top_5_anual_df['Indicador']
-                            == indicador][top_5_anual_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['tipoCalculo','DataReferencia']))
-print('Mensal:')
-print(top_5_monthly_df[top_5_monthly_df['Indicador'] 
-                            == indicador][top_5_monthly_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['DataReferencia']))
+# print('Top 5:')
+# print('Anual:')
+# print(top_5_anual_df[top_5_anual_df['Indicador']
+#                             == indicador][top_5_anual_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['tipoCalculo','DataReferencia']))
+# print('Mensal:')
+# print(top_5_monthly_df[top_5_monthly_df['Indicador'] 
+#                             == indicador][top_5_monthly_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['DataReferencia']))
 
-print("teste")
+print("Top 5 data:")
 print(top_5_data[top_5_data['Indicador'] 
             == indicador][top_5_data['Data'] == '2019-04-26'][top_5_data['tipoCalculo'] == 'C'].sort_values(by=['DataReferencia']))
+    
+print('Expectativa data:')
+print(expec_data[expec_data['Indicador']
+                            == indicador][expec_data['Data'] == '2019-04-26'][expec_data['baseCalculo'] == 0].sort_values(by=['DataReferencia']))
 
 # monthly_data_df['DataReferencia'] = pd.to_datetime(
 #     monthly_data_df['DataReferencia'], format='%m/%Y')
