@@ -19,7 +19,7 @@
     {'Indicadores': 'Meta para taxa over-selic', 'baseCalculo': 0}, 
     {'Indicadores': 'Produção industrial', 'baseCalculo': 0},
     {'Indicadores': 'Taxa de câmbio', 'baseCalculo': 0}]},
-{'url': 'ttps://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana,Minimo,Maximo,numeroRespondentes',
+{'url': 'https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana,Minimo,Maximo,numeroRespondentes',
 'Filtro': [{'Indicadores': 'PIB Total'}, 
     {'Indicadores': 'PIB Industrial'}, 
     {'Indicadores': 'PIB Serviços'}, 
