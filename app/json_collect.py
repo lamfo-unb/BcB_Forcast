@@ -67,14 +67,20 @@ indicadores = pd.DataFrame.from_dict(list([
 twelve_months_data_df = pd.DataFrame.from_dict(
     twelve_months_data['value'], orient='columns') # nao possui DataReferencia
 
+twelve_months_data_df = twelve_months_data_df[twelve_months_data_df['Suavizada'] == 'S'][twelve_months_data_df['baseCalculo'] == 0]
+
 monthly_data_df = pd.DataFrame.from_dict(
     monthly_data['value'], orient='columns')
+
+monthly_data_df = monthly_data_df[monthly_data_df['baseCalculo'] == 0]
 
 quarterly_data_df = pd.DataFrame.from_dict(
     quarterly_data['value'], orient='columns')
 
 annual_data_df = pd.DataFrame.from_dict(
     annual_data['value'], orient='columns')
+
+annual_data_df = annual_data_df[annual_data_df['baseCalculo'] == 0]
 
 top_5_anual_df = pd.DataFrame.from_dict(
     top_5_anual_data['value'], orient='columns')
@@ -143,21 +149,21 @@ data = '2019-05-10'
 #                             == indicador][top_5_monthly_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['DataReferencia']))
 
 print('Inflação Doze meses:')
-print(twelve_months_data_df[twelve_months_data_df['Suavizada'] == 'S'][twelve_months_data_df['baseCalculo'] == 0][twelve_months_data_df['Data'] == data]
+print(twelve_months_data_df[twelve_months_data_df['Data'] == data]
             [twelve_months_data_df['Indicador'] == indicador])
+
+print('Expectativa data:')
+print(expec_data[expec_data['Data'] == data]
+            [expec_data['Indicador'] == indicador].sort_values(by=['DataReferencia']))
 
 print("Top 5 data:")
 print(top_5_data[top_5_data['tipoCalculo'] == 'C'][top_5_data['Data'] == data]
             [top_5_data['Indicador'] == indicador].sort_values(by=['DataReferencia']))
     
-print('Expectativa data:')
-print(expec_data[expec_data['baseCalculo'] == 0][expec_data['Data'] == data]
-            [expec_data['Indicador'] == indicador].sort_values(by=['DataReferencia']))
 
 
-print(indicadores['Conjunto'].values)
+print(indicadores['Conjunto'].unique())
 print(indicadores[indicadores['Conjunto'] == 'Inflação']['IndiNome'].values)
-print(indicadores[indicadores['Conjunto'] == 'Fiscais']['indi'][4]['Indicadores'].values)
 
 indicadores[indicadores['IndiNome'] == 'IGP-DI'][['Indicador','IndicadorDetalhe']]
 
