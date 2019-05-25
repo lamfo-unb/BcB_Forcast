@@ -120,59 +120,14 @@ top_5_data.loc[top_5_data['Fonte'] == 'Anual','DataReferencia'] = '31/12/'+top_5
 
 top_5_data = top_5_data.reset_index(drop=True)
 
-<<<<<<< HEAD
 top_5_data['IndiNome'] = top_5_data['Indicador']
 
 top_5_data['DataReferencia'] = pd.to_datetime(top_5_data['DataReferencia'])
-=======
-indicador = 'IPCA'
-data = '2019-05-10'
-
-# print('Inflação:')
-# print('Doze meses:')
-# print(twelve_months_data_df[twelve_months_data_df['Indicador']
-#                             == indicador][twelve_months_data_df['Data'] == '2019-04-26'][twelve_months_data_df['Suavizada'] == 'S'][twelve_months_data_df['baseCalculo'] == 0])
-# print('Expectativa:')
-# print('Mesal:')
-# print(monthly_data_df[monthly_data_df['Indicador']
-#                             == indicador][monthly_data_df['Data'] == '2019-04-26'][monthly_data_df['baseCalculo'] == 0].sort_values(by=['DataReferencia']))
-# print('Quaternal:')
-# print(quarterly_data_df[quarterly_data_df['Indicador']
-#                             == indicador][quarterly_data_df['Data'] == '2019-04-26'].sort_values(by=['DataReferencia']))
-# print('Anual:')
-# print(annual_data_df[annual_data_df['Indicador']
-#                             == indicador][annual_data_df['Data'] == '2019-04-26'][annual_data_df['baseCalculo'] == 0].sort_values(by=['DataReferencia']))
-
-# print('Top 5:')
-# print('Anual:')
-# print(top_5_anual_df[top_5_anual_df['Indicador']
-#                             == indicador][top_5_anual_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['tipoCalculo','DataReferencia']))
-# print('Mensal:')
-# print(top_5_monthly_df[top_5_monthly_df['Indicador'] 
-#                             == indicador][top_5_monthly_df['Data'] == '2019-04-26'][top_5_monthly_df['tipoCalculo'] == 'C'].sort_values(by=['DataReferencia']))
-
-print('Inflação Doze meses:')
-print(twelve_months_data_df[twelve_months_data_df['Data'] == data]
-            [twelve_months_data_df['Indicador'] == indicador])
-
-print('Expectativa data:')
-print(expec_data[expec_data['Data'] == data]
-            [expec_data['Indicador'] == indicador].sort_values(by=['DataReferencia']))
-
-print("Top 5 data:")
-print(top_5_data[top_5_data['tipoCalculo'] == 'C'][top_5_data['Data'] == data]
-            [top_5_data['Indicador'] == indicador].sort_values(by=['DataReferencia']))
-    
->>>>>>> 140d39b202c6fe3350677f277cf4e8ab5ffdea7f
 
 top_5_data.drop(['Indicador','Fonte'], axis=1, inplace=True)
 
-<<<<<<< HEAD
 top_5_data = top_5_data.reset_index(drop=True)
-=======
-print(indicadores['Conjunto'].unique())
-print(indicadores[indicadores['Conjunto'] == 'Inflação']['IndiNome'].values)
->>>>>>> 140d39b202c6fe3350677f277cf4e8ab5ffdea7f
+
 
 
 indicador = 'IPCA'
