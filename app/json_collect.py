@@ -2,6 +2,7 @@ import urllib.request, json
 import pandas as pd
 from pandas.io.json import json_normalize
 
+# --  AGRUPAMENTO 1
 # coleta dados api
 with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Suavizada,baseCalculo,Media,Mediana") as url:
     twelve_months_data = json.loads(url.read().decode())
@@ -134,20 +135,20 @@ indicador = 'IPCA'
 data = '2019-05-17'
 
 print(indicadores['Conjunto'].unique())
-print(indicadores[indicadores['Conjunto'] == 'Inflação']['IndiNome'].values)
+# print(indicadores[indicadores['Conjunto'] == 'Inflação']['IndiNome'].values)
 
-print(indicador)
-print(data)
+# print(indicador)
+# print(data)
 
-print('Inflação Doze meses:')
-print(twelve_months_data_df[twelve_months_data_df['Data'] == data]
-            [twelve_months_data_df['IndiNome'] == indicador])
+# print('Inflação Doze meses:')
+# print(twelve_months_data_df[twelve_months_data_df['Data'] == data]
+#             [twelve_months_data_df['IndiNome'] == indicador])
 
-print('Expectativa data:')
-print(expec_data[expec_data['Data'] == data]
-            [expec_data['IndiNome'] == indicador].sort_values(by=['DataReferencia']))
+# print('Expectativa data:')
+# print(expec_data[expec_data['Data'] == data]
+#             [expec_data['IndiNome'] == indicador].sort_values(by=['DataReferencia']))
 
-print("Top 5 data:")
-print(top_5_data[top_5_data['tipoCalculo'] == 'C'][top_5_data['Data'] == data]
-            [top_5_data['IndiNome'] == indicador].sort_values(by=['DataReferencia']))
+# print("Top 5 data:")
+# print(top_5_data[top_5_data['tipoCalculo'] == 'C'][top_5_data['Data'] == data]
+#             [top_5_data['IndiNome'] == indicador].sort_values(by=['DataReferencia']))
     

@@ -1,13 +1,17 @@
 from flask import Flask
 from flask import render_template
-import graphs
+import json_collect 
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    bar = graphs.create_plot('2019-03-22', 'IGP-DI')
-    return render_template('index.html', plot=bar)
+    legend = 'IPCA'
+    labels = json_collect.expec_data[json_collect.expec_data['Data'] ==
+                                     '2019-06-14'][json_collect.expec_data['IndiNome'] == 'IPCA'].sort_values(by=['DataReferencia'])['DataReferencia']
+    values = json_collect.expec_data[json_collect.expec_data['Data'] ==
+                                     '2019-06-14'][json_collect.expec_data['IndiNome'] == 'IPCA'].sort_values(by=['DataReferencia'])['Media']
+    return render_template('plain_page.html', values=values, labels=labels, legend=legend)
 
 @app.route('/dashboard')
 def dashboard():
@@ -15,3 +19,6 @@ def dashboard():
 
 
 app.run(debug=True)
+
+# expec_data[expec_data['IndiNome'].isin(
+#     indicadores[indicadores['Conjunto'] == 'Inflação']['IndiNome'].values).values][expec_data['Data'] == '2019-06-14']
