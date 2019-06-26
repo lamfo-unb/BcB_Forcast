@@ -227,7 +227,7 @@ html , body{
     top: 0;
     width: 210px;
     z-index: 4000;
-    background: #3E5367;
+    background: #00255d;
     display: none
 }
 .nav-sm ul.nav.child_menu li {
@@ -419,7 +419,7 @@ body .container.body .right_col {
     color: #E74C3C
 }
 .dark {
-    color: #34495E
+    color: #00255d
 }
 .border-blue {
     border-color: #3498DB !important
@@ -437,7 +437,7 @@ body .container.body .right_col {
     border-color: #E74C3C !important
 }
 .border-dark {
-    border-color: #34495E !important
+    border-color: #00255d !important
 }
 .bg-white {
     background: #fff !important;
@@ -539,7 +539,7 @@ body {
     overflow: hidden
 }
 .progress-bar-dark {
-    background-color: #34495E !important
+    background-color: #00255d !important
 }
 .progress-bar-gray {
     background-color: #BDC3C7 !important
@@ -677,7 +677,7 @@ a:focus {
     margin-bottom: 0
 }
 .navbar-header {
-    background: #34495E
+    background: #00255d
 }
 .navbar-right {
     margin-right: 0
@@ -746,7 +746,7 @@ a:focus {
     padding-left: 36px
 }
 .nav-md ul.nav.child_menu li:before {
-    background: #425668;
+    background: #00255d;
     bottom: auto;
     content: "";
     height: 8px;
@@ -759,7 +759,7 @@ a:focus {
     border-radius: 50%
 }
 .nav-md ul.nav.child_menu li:after {
-    border-left: 1px solid #425668;
+    border-left: 1px solid #00255d;
     bottom: 0;
     content: "";
     left: 27px;
@@ -789,7 +789,7 @@ a:focus {
 }
 .nav.side-menu>li.current-page,
 .nav.side-menu>li.active {
-    border-right: 5px solid #1ABB9C
+    border-right: 5px solid #4a77bc
 }
 .nav li.current-page {
     background: rgba(255, 255, 255, 0.05)
@@ -802,7 +802,7 @@ a:focus {
 }
 .nav.side-menu>li.active>a {
     text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-    background: linear-gradient(#334556, #2C4257), #004c8b;
+    background: linear-gradient(#00255d, #00255d), #004c8b;
     box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0
 }
 .navbar-brand,

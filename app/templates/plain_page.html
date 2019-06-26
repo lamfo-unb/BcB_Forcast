@@ -9,13 +9,19 @@
 {% block content %}
 <head>
   <meta charset="utf-8" />
-  <title>Chart.js Example</title>
   <!-- import plugin script -->
-  <script src='static/Chart.min.js'></script>
+  <!-- <script src='static/Chart.min.js'></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 
-<div class="right_col" role="main">
 
+<div class="right_col" role="main">
+  
+  <div class="page-title">
+    <div class="title-left"><h3>INFLAÇÃO</h3></div>
+  </div>
     <br />
 
     <div class="row">
@@ -23,63 +29,571 @@
         <div class="dashboard_graph x_panel">
           <div class="row x_title">
             <div class="col-md-6">
-              <h3>Simple Line Charts <small>Graph title sub-title</small></h3>
+              <h3>EXPECTATIVA DE MERCADO</h3><h5>Referente a {{ expec_data }}</h5>
             </div>
           </div>
           <div class="x_content">
-            <div class="demo-container" style="height:400">
-                <canvas id="myChart" width="1050" height="400"></canvas>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da previsão
+                  <span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu">
+                  {% for x in expec_data_values %}
+                  <li><a href="http://127.0.0.1:5000/?expec_data={{ x }}">{{ x }}</a></li>
+                  {% endfor %}
+                </ul>
+                </div>
+                <canvas id="myChart" width="800" height="400"></canvas>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="dashboard_graph x_panel">
+            <div class="row x_title">
+              <div class="col-md-6">
+                <h3>TOP 5</h3><h5>Referente a {{ expec_data }}</h5>
+              </div>
+            </div>
+            <div class="x_content">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <!-- <div class="btn-group">
+                  <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da
+                    previsão
+                    <span class="caret"></span>
+                  </button>
+                  <ul role="menu" class="dropdown-menu">
+                    {% for x in top_5_data_values %}
+                    <li><a href="http://127.0.0.1:5000/?top_5_data={{ x }}">{{ x }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div> -->
+                <canvas id="myChart2" width="800" height="400"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="dashboard_graph x_panel">
+                  <div class="row x_title">
+                    <div class="col-md-6">
+                      <h3>12 MESES</h3><h5>Referente a {{ expec_data }}</h5>
+                    </div>
+                  </div>
+                  <div class="x_content">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <!-- <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da
+                  previsão
+                  <span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu">
+                  {% for x in twelve_months_data_values %}
+                  <li><a href="http://127.0.0.1:5000/?twelve_months_data={{ x }}">{{ x }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div> -->
+              <canvas id="myChart3" width="800" height="400"></canvas>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
   </div>
 
 <script>
   // Global parameters:
 // do not resize the chart canvas when its container does (keep at 600x400px)
-Chart.defaults.global.responsive = false;
+Chart.defaults.global.responsive = true;
  
  // define the chart data
  var chartData = {
-   labels : [{% for item in labels %}
-              "{{item}}",
-             {% endfor %}],
-   datasets : [{
-       label: '{{ legend }}',
-       fill: true,
-       lineTension: 0.1,
-       backgroundColor: "rgba(75,192,192,0.4)",
-       borderColor: "rgba(75,192,192,1)",
-       borderCapStyle: 'butt',
-       borderDash: [],
-       borderDashOffset: 0.0,
-       borderJoinStyle: 'miter',
-       pointBorderColor: "rgba(75,192,192,1)",
-       pointBackgroundColor: "#fff",
-       pointBorderWidth: 1,
-       pointHoverRadius: 5,
-       pointHoverBackgroundColor: "rgba(75,192,192,1)",
-       pointHoverBorderColor: "rgba(220,220,220,1)",
-       pointHoverBorderWidth: 2,
-       pointRadius: 1,
-       pointHitRadius: 10,
-       data : [{% for item in values %}
-                 {{item}},
-               {% endfor %}],
-       spanGaps: false
-   }]
+    datasets : [
+    {
+      fill: false,
+      label: '{{ expec_legend_ipca }}',
+      lineTension: 0.1,
+      backgroundColor: "#d32f2f",
+      borderColor: "#d32f2f",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#d32f2f",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#d32f2f",
+      pointHoverBorderColor: "#d32f2f",
+      pointHoverBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverBackgroundColor: "#d32f2f",
+      pointHoverBorderColor: "#d32f2f",
+      pointHoverBorderWidth: 2,
+      pointRadius: 5,
+      pointHitRadius: 10,
+      data : [{% for date, value in expec_values_ipca %}
+            {x:"{{ date }}",
+            y: {{value}}},
+        {% endfor %}]
+    },
+    {
+        label: '{{ expec_legend_igp_m }}',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "rgba(75,192,192,1)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBorderColor: "rgba(75,192,192,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 5,
+        pointHitRadius: 10,
+        data : [{% for date, value in expec_values_igp_m %}
+          {
+            x: "{{ date }}",
+              y: {{value}}},
+          {% endfor %}]
+    }
+    // },
+    // {
+    //     label: '{{ expec_legend_inpc }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#7b1fa2",
+    //     borderColor: "#7b1fa2",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#7b1fa2",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#7b1fa2",
+    //     pointHoverBorderColor: "#7b1fa2",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_inpc %}
+    //               "{{item}}",
+    //             {% endfor %}]
+    // },
+    // {
+    //     label: '{{ expec_legend_ipa_di }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#303f9f",
+    //     borderColor: "#303f9f",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#303f9f",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#303f9f",
+    //     pointHoverBorderColor: "#303f9f",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_ipa_di %}
+    //     "{{item}}",
+    //     {% endfor %}]
+    // },
+    // {
+    //     label: '{{ expec_legend_ipa_m }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#0288d1",
+    //     borderColor: "#0288d1",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#0288d1",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#0288d1",
+    //     pointHoverBorderColor: "#0288d1",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_ipa_m %}
+    //     "{{item}}",
+    //     {% endfor %}]
+    // },
+    // {
+    //     label: '{{ expec_legend_ipca_15 }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#fbc02d",
+    //     borderColor: "#fbc02d",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#fbc02d",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#fbc02d",
+    //     pointHoverBorderColor: "#fbc02d",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_ipca_15 %}
+    //     "{{item}}",
+    //     {% endfor %}]
+    // },
+    // {
+    //     label: '{{ expec_legend_pacm }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#f57c00",
+    //     borderColor: "#f57c00",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#f57c00",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#f57c00",
+    //     pointHoverBorderColor: "#f57c00",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_pacm %}
+    //     "{{item}}",
+    //     {% endfor %}]
+    // },
+    // {
+    //     label: '{{ expec_legend_igp_di }}',
+    //     fill: false,
+    //     lineTension: 0.1,
+    //     backgroundColor: "#616161",
+    //     borderColor: "#616161",
+    //     borderCapStyle: 'butt',
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     borderJoinStyle: 'miter',
+    //     pointBorderColor: "#616161",
+    //     pointBackgroundColor: "#fff",
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 5,
+    //     pointHoverBackgroundColor: "#616161",
+    //     pointHoverBorderColor: "#616161",
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 1,
+    //     pointHitRadius: 10,
+    //     data : [{% for item in expec_values_igp_di %}
+    //     "{{item}}",
+    //     {% endfor %}]
+    // }
+    ]
  }
-  
+
+ 
+ var chart2Data = {
+    labels: [{% for item in top_5_labels_ipca %}
+  "{{item}}",
+    {% endfor %}],
+  datasets: [
+      {
+        label: '{{ top_5_legend_ipca }}',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "#d32f2f",
+        borderColor: "#d32f2f",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "#d32f2f",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "#d32f2f",
+        pointHoverBorderColor: "#d32f2f",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: [{% for item in top_5_values_ipca %}
+                "{{item}}",
+      {% endfor %}]
+    },
+    {
+        label: '{{ top_5_legend_igp_m }}',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "rgba(75,192,192,1)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBorderColor: "rgba(75,192,192,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data : [{% for item in top_5_values_igp_m %}
+        "{{item}}",
+        {% endfor %}]
+    }
+   ]
+ }
+
+ var chart3Data = {
+    labels: [{% for item in twelve_months_labels %}
+  "{{item}}",
+    {% endfor %}],
+  datasets: [
+    {
+      label: '{{ twelve_months_legend_ipca }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#d32f2f",
+      borderColor: "#d32f2f",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#d32f2f",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#d32f2f",
+      pointHoverBorderColor: "#d32f2f",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data: [{% for item in twelve_months_values_ipca %}
+                "{{item}}",
+    {% endfor %}]
+  },
+  {
+      label: '{{ twelve_months_legend_igp_m }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "rgba(75,192,192,1)",
+      borderColor: "rgba(75,192,192,1)",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(75,192,192,1)",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+      pointHoverBorderColor: "rgba(75,192,192,1)",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_igp_m %}
+      "{{item}}",
+      {% endfor %}]
+    },
+  {
+      label: '{{ twelve_months_legend_inpc }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#7b1fa2",
+      borderColor: "#7b1fa2",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#7b1fa2",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#7b1fa2",
+      pointHoverBorderColor: "#7b1fa2",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_inpc %}
+      "{{item}}",
+      {% endfor %}]
+    },
+  {
+      label: '{{ twelve_months_legend_ipa_di }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#303f9f",
+      borderColor: "#303f9f",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#303f9f",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#303f9f",
+      pointHoverBorderColor: "#303f9f",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_ipa_di %}
+      "{{item}}",
+      {% endfor %}]
+  },
+  {
+      label: '{{ twelve_months_legend_ipa_m }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#0288d1",
+      borderColor: "#0288d1",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#0288d1",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#0288d1",
+      pointHoverBorderColor: "#0288d1",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_ipa_m %}
+      "{{item}}",
+      {% endfor %}]
+  },
+  {
+      label: '{{ twelve_months_legend_ipca_15 }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#fbc02d",
+      borderColor: "#fbc02d",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#fbc02d",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#fbc02d",
+      pointHoverBorderColor: "#fbc02d",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_ipca_15 %}
+      "{{item}}",
+      {% endfor %}]
+  },
+  {
+      label: '{{ twelve_months_legend_ipc_fipe }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#f57c00",
+      borderColor: "#f57c00",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#f57c00",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#f57c00",
+      pointHoverBorderColor: "#f57c00",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_ipc_fipe %}
+      "{{item}}",
+      {% endfor %}]
+    },
+  {
+      label: '{{ twelve_months_legend_igp_di }}',
+      fill: false,
+      lineTension: 0.1,
+      backgroundColor: "#616161",
+      borderColor: "#616161",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "#616161",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "#616161",
+      pointHoverBorderColor: "#616161",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in twelve_months_values_igp_di %}
+      "{{item}}",
+      {% endfor %}]
+    }
+   ]
+ }
+ 
  // get chart canvas
  var ctx = document.getElementById("myChart").getContext("2d");
+ var ctx2 = document.getElementById("myChart2").getContext("2d");
+ var ctx3 = document.getElementById("myChart3").getContext("2d");
   
  // create the chart using the chart canvas
  var myChart = new Chart(ctx, {
-   type: 'line',
-   data: chartData,
+  type: 'line',
+  data: chartData,
+  options: {
+    scales: {
+      xAxes: [{
+        type: "time",
+        time: {
+          format: 'DD/MM/YYYY',
+          tooltipFormat: 'll'
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Date'
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'value'
+        }
+      }]
+    }
+  }
+ });
+ var myChart2 = new Chart(ctx2, {
+    type: 'line',
+    data: chart2Data,
+ });
+ var myChart3 = new Chart(ctx3, {
+    type: 'line',
+    data: chart3Data,
  });
 </script>
 {% endblock content %}

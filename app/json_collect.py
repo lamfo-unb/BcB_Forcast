@@ -151,4 +151,20 @@ print(indicadores['Conjunto'].unique())
 # print("Top 5 data:")
 # print(top_5_data[top_5_data['tipoCalculo'] == 'C'][top_5_data['Data'] == data]
 #             [top_5_data['IndiNome'] == indicador].sort_values(by=['DataReferencia']))
-    
+
+# print(twelve_months_data_df.columns)
+
+# print(expec_data[expec_data['Data'] ==
+#                                            '2019-06-14'])
+
+# expec_labels_ipca = expec_data[expec_data['Data'] ==
+#                                             '2019-06-14'][expec_data['IndiNome'] == 'IPCA'].sort_values(by=['DataReferencia'])['DataReferencia']
+print(expec_data[expec_data['Data'] == '2019-06-12'][expec_data['IndiNome'] == 'IPA-DI'].sort_values(by=['DataReferencia'])['Media'])
+print(expec_data[expec_data['Data'] == '2019-06-12'][expec_data['IndiNome']
+                                                     == 'IPA-DI'].sort_values(by=['DataReferencia'])['DataReferencia'])
+
+# expec_labels_igp_di = expec_data[expec_data['Data'] ==
+#                                               '2019-06-14'][expec_data['IndiNome'] == 'IGP-DI'].sort_values(by=['DataReferencia'])['DataReferencia']
+# expec_values_igp_di = expec_data[expec_data['Data'] ==
+#                                               '2019-06-14'][expec_data['IndiNome'] == 'IGP-DI'].sort_values(by=['DataReferencia'])['Media']
+# print(expec_data[expec_data['Data'] =='2019-06-14'][expec_data['IndiNome'] == 'IPCA'].sort_values(by=['DataReferencia'])['DataReferencia'print(twelve_months_data_df[twelve_months_data_df['IndiNome'] == 'IGP-DI'].sort_values(by=['Data'])['Media'])
