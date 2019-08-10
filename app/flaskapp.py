@@ -44,7 +44,7 @@ def home():
 		i = i +1
 
 
-	return render_template('plain_page.html', color = color, indicadores_list = indicadores_list, expec_dados_t = expec_dados_t, 
+	return render_template('plain_page.html', expec_data_values = expec_data_values, color = color, indicadores_list = indicadores_list, expec_dados_t = expec_dados_t, 
 						top5_dados_t = top5_dados_t, E12_dados_t = E12_dados_t, expec_data=expec_data)
 
 @app.route('/dashboard')

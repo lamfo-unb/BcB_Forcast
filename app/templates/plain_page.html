@@ -115,38 +115,42 @@ console.log('{{top5_dados_t[1]["data"]}}');
  // define the chart data
  var chartData = {
     datasets : [
+	{% set virgula = [] %}
 	{% for i in indicadores_list %}
-		{% if i != 0 %}
-			,
+		{% if expec_dados_t[i]["data"] %}	
+			{% if virgula != [] %}
+				,
+			{% endif %}
+			{
+			fill: false,
+			label: '{{ expec_dados_t[i]["label"] }}',
+			lineTension: 0.1,
+			backgroundColor: '{{ color[i] }}',
+			borderColor: '{{ color[i] }}',
+			borderCapStyle: 'butt',
+			borderDash: [],
+			borderDashOffset: 0.0,
+			borderJoinStyle: 'miter',
+			pointBorderColor: '{{ color[i] }}',
+			pointBackgroundColor: "#fff",
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: '{{ color[i] }}',
+			pointHoverBorderColor: '{{ color[i] }}',
+			pointHoverBorderWidth: 2,
+			pointRadius: 5,
+			pointHoverBackgroundColor: '{{ color[i] }}',
+			pointHoverBorderColor: '{{ color[i] }}',
+			pointHoverBorderWidth: 2,
+			pointRadius: 5,
+			pointHitRadius: 10,
+			data : [{% for date, value in expec_dados_t[i]["data"] %}
+					{x:"{{ date }}",
+					y: {{value}}},
+				{% endfor %}]
+			}
+			{% if virgula.append('1') %}{% endif %}
 		{% endif %}
-		{
-		fill: false,
-		label: '{{ expec_dados_t[i]["label"] }}',
-		lineTension: 0.1,
-		backgroundColor: '{{ color[i] }}',
-		borderColor: '{{ color[i] }}',
-		borderCapStyle: 'butt',
-		borderDash: [],
-		borderDashOffset: 0.0,
-		borderJoinStyle: 'miter',
-		pointBorderColor: '{{ color[i] }}',
-		pointBackgroundColor: "#fff",
-		pointBorderWidth: 1,
-		pointHoverRadius: 5,
-		pointHoverBackgroundColor: '{{ color[i] }}',
-		pointHoverBorderColor: '{{ color[i] }}',
-		pointHoverBorderWidth: 2,
-		pointRadius: 5,
-		pointHoverBackgroundColor: '{{ color[i] }}',
-		pointHoverBorderColor: '{{ color[i] }}',
-		pointHoverBorderWidth: 2,
-		pointRadius: 5,
-		pointHitRadius: 10,
-		data : [{% for date, value in expec_dados_t[i]["data"] %}
-				{x:"{{ date }}",
-				y: {{value}}},
-			{% endfor %}]
-		}
 	{% endfor %}
     ]
  }
