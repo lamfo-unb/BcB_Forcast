@@ -3,282 +3,336 @@
 {% block title %} Plain Page {% endblock title %}
 
 {% block stylesheets %}
-  {{ super() }}
+	{{ super() }}
 {% endblock stylesheets %}
 
 {% block content %}
 <head>
-  <meta charset="utf-8" />
-  <!-- import plugin script -->
-  <!-- <script src='static/Chart.min.js'></script> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<meta charset="utf-8" />
+	<!-- import plugin script -->
+	<!-- <script src='static/Chart.min.js'></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 
 
 <div class="right_col" role="main">
   
-  <div class="page-title">
-    <div class="title-left"><h3>INFLAÇÃO</h3></div>
-  </div>
+	<div class="page-title">
+    	<div class="title-left"><h3>{{ConjSelecionado}}</h3></div>
+  	</div>
     <br />
 
     <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="dashboard_graph x_panel">
-          <div class="row x_title">
-            <div class="col-md-6">
-              <h3>EXPECTATIVA DE MERCADO</h3><h5>Referente a {{ expec_data }}</h5>
-            </div>
-          </div>
-          <div class="x_content">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="btn-group">
-                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da previsão
-                  <span class="caret"></span>
-                </button>
-                <ul role="menu" class="dropdown-menu">
-                  {% for x in expec_data_values %}
-                  <li><a href="http://127.0.0.1:5000/?expec_data={{ x }}">{{ x }}</a></li>
-                  {% endfor %}
-                </ul>
-                </div>
-                <canvas id="myChart" width="800" height="400"></canvas>
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
-      <div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="dashboard_graph x_panel">
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>Filtros</h3>
+					</div>
+				</div>
+				<div class="x_content">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="btn-group">
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da previsão
+								<span class="caret"></span>
+							</button>
+							<ul role="menu" class="dropdown-menu">
+								{% for x in DataSelect %}
+									<li><a href="http://127.0.0.1:5000/?DataSelecionada={{ x }}&ConjSelecionado={{ConjSelecionado}}">{{ x }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+
+						<div class="btn-group">
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Conjunto
+								<span class="caret"></span>
+							</button>
+							<ul role="menu" class="dropdown-menu">
+								{% for x in ConjIndicadores %}
+									<li><a href="http://127.0.0.1:5000/?DataSelecionada={{DataSelecionada}}&ConjSelecionado={{ x }}">{{ x }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+        	</div>
+      	</div>
+	</div>
+	<div class="row" id="divExpecGrafico">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="dashboard_graph x_panel">
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>EXPECTATIVA DE MERCADO</h3><h5>Referente a {{ DataSelecionada }}</h5>
+					</div>
+				</div>
+				<div class="x_content">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<canvas id="ExpecGrafico" width="800" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>  
+	</div>
+    <div class="row" id="divExpecTop5Grafico">
         <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="dashboard_graph x_panel">
-            <div class="row x_title">
-              <div class="col-md-6">
-                <h3>TOP 5</h3><h5>Referente a {{ expec_data }}</h5>
-              </div>
-            </div>
-            <div class="x_content">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <!-- <div class="btn-group">
-                  <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da
-                    previsão
-                    <span class="caret"></span>
-                  </button>
-                  <ul role="menu" class="dropdown-menu">
-                    {% for x in top_5_data_values %}
-                    <li><a href="http://127.0.0.1:5000/?top_5_data={{ x }}">{{ x }}</a></li>
-                    {% endfor %}
-                  </ul>
-                </div> -->
-                <canvas id="myChart2" width="800" height="400"></canvas>
-              </div>
-            </div>
-          </div>
+          	<div class="dashboard_graph x_panel">
+            	<div class="row x_title">
+              		<div class="col-md-6">
+                		<h3>TOP 5</h3><h5>Referente a {{ DataSelecionada }}</h5>
+              		</div>
+            	</div>
+            	<div class="x_content">
+              		<div class="col-md-12 col-sm-12 col-xs-12">
+                		<canvas id="ExpecTop5Grafico" width="800" height="400"></canvas>
+              		</div>
+            	</div>
+          	</div>
         </div>  
-      </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard_graph x_panel">
-                  <div class="row x_title">
-                    <div class="col-md-6">
-                      <h3>12 MESES</h3><h5>Referente a {{ expec_data }}</h5>
-                    </div>
-                  </div>
-                  <div class="x_content">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <!-- <div class="btn-group">
-                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da
-                  previsão
-                  <span class="caret"></span>
-                </button>
-                <ul role="menu" class="dropdown-menu">
-                  {% for x in twelve_months_data_values %}
-                  <li><a href="http://127.0.0.1:5000/?twelve_months_data={{ x }}">{{ x }}</a></li>
-                  {% endfor %}
-                </ul>
-              </div> -->
-              <canvas id="myChart3" width="800" height="400"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>
+    </div>
+	<div class="row" id="divE12Grafico">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="dashboard_graph x_panel">
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>12 MESES</h3><h5>Referente a {{ DataSelecionada }}</h5>
+					</div>
+				</div>
+				<div class="x_content">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<canvas id="E12Grafico" width="800" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script>
-  // Global parameters:
-// do not resize the chart canvas when its container does (keep at 600x400px)
-Chart.defaults.global.responsive = true;
-console.log('{{top5_dados_t[0]["data"]}}');
-console.log('{{top5_dados_t[1]["data"]}}');
- // define the chart data
- var chartData = {
-    datasets : [
-	{% set virgula = [] %}
-	{% for i in indicadores_list %}
-		{% if expec_dados_t[i]["data"] %}	
-			{% if virgula != [] %}
-				,
-			{% endif %}
-			{
-			fill: false,
-			label: '{{ expec_dados_t[i]["label"] }}',
-			lineTension: 0.1,
-			backgroundColor: '{{ color[i] }}',
-			borderColor: '{{ color[i] }}',
-			borderCapStyle: 'butt',
-			borderDash: [],
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'miter',
-			pointBorderColor: '{{ color[i] }}',
-			pointBackgroundColor: "#fff",
-			pointBorderWidth: 1,
-			pointHoverRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHitRadius: 10,
-			data : [{% for date, value in expec_dados_t[i]["data"] %}
-					{x:"{{ date }}",
-					y: {{value}}},
-				{% endfor %}]
-			}
-			{% if virgula.append('1') %}{% endif %}
-		{% endif %}
-	{% endfor %}
-    ]
- }
+	// Global parameters:
+	// do not resize the chart canvas when its container does (keep at 600x400px)
+	Chart.defaults.global.responsive = true;
 
- 
- var chart2Data = {
-	datasets : [
-	{% set virgula = [] %}
-	{% for i in indicadores_list %}
-		{% if top5_dados_t[i]["data"] %}		
-			{% if virgula != [] %}
-				,
+	// define the chart data
+	var ExpecGraficoData = {
+		datasets : [
+		{% set virgula = [] %}
+		{% for i in indicadores_list %}
+			{% if expec_dados_t[i]["data"] %}	
+				{% if virgula != [] %}
+					,
+				{% endif %}
+				{
+				fill: false,
+				label: '{{ expec_dados_t[i]["label"] }}',
+				lineTension: 0.1,
+				backgroundColor: '{{ color[i] }}',
+				borderColor: '{{ color[i] }}',
+				borderCapStyle: 'butt',
+				borderDash: [],
+				borderDashOffset: 0.0,
+				borderJoinStyle: 'miter',
+				pointBorderColor: '{{ color[i] }}',
+				pointBackgroundColor: "#fff",
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHitRadius: 10,
+				data : [{% for date, value in expec_dados_t[i]["data"] %}
+						{x:"{{ date }}",
+						y: {{value}}},
+					{% endfor %}]
+				}
+				{% if virgula.append('1') %}{% endif %}
 			{% endif %}
-			{
-			fill: false,
-			label: '{{ top5_dados_t[i]["label"] }}',
-			lineTension: 0.1,
-			backgroundColor: '{{ color[i] }}',
-			borderColor: '{{ color[i] }}',
-			borderCapStyle: 'butt',
-			borderDash: [],
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'miter',
-			pointBorderColor: '{{ color[i] }}',
-			pointBackgroundColor: "#fff",
-			pointBorderWidth: 1,
-			pointHoverRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHitRadius: 10,
-			data : [{% for date, value in top5_dados_t[i]["data"] %}
-					{x:"{{ date }}",
-					y: {{value}}},
-				{% endfor %}]
-			}
-			{% if virgula.append('1') %}{% endif %}
-		{% endif %}
-	{% endfor %}
-    ]
- }
+		{% endfor %}
+		]
+	}
+	var ExpecTop5GraficoData = {
+		datasets : [
+		{% set virgula = [] %}
+		{% for i in indicadores_list %}
+			{% if top5_dados_t[i]["data"] %}		
+				{% if virgula != [] %}
+					,
+				{% endif %}
+				{
+				fill: false,
+				label: '{{ top5_dados_t[i]["label"] }}',
+				lineTension: 0.1,
+				backgroundColor: '{{ color[i] }}',
+				borderColor: '{{ color[i] }}',
+				borderCapStyle: 'butt',
+				borderDash: [],
+				borderDashOffset: 0.0,
+				borderJoinStyle: 'miter',
+				pointBorderColor: '{{ color[i] }}',
+				pointBackgroundColor: "#fff",
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHitRadius: 10,
+				data : [{% for date, value in top5_dados_t[i]["data"] %}
+						{x:"{{ date }}",
+						y: {{value}}},
+					{% endfor %}]
+				}
+				{% if virgula.append('1') %}{% endif %}
+			{% endif %}
+		{% endfor %}
+		]
+	}
 
- var chart3Data = {
-    datasets : [
-	{% set virgula = [] %}
-	{% for i in indicadores_list %}
-		{% if E12_dados_t[i]["data"] %}	
-			{% if virgula != [] %}
-				,
+	var E12GraficoData = {
+		datasets : [
+		{% set virgula = [] %}
+		{% for i in indicadores_list %}
+			{% if E12_dados_t[i]["data"] %}	
+				{% if virgula != [] %}
+					,
+				{% endif %}
+				{
+				fill: false,
+				label: '{{ E12_dados_t[i]["label"] }}',
+				lineTension: 0.1,
+				backgroundColor: '{{ color[i] }}',
+				borderColor: '{{ color[i] }}',
+				borderCapStyle: 'butt',
+				borderDash: [],
+				borderDashOffset: 0.0,
+				borderJoinStyle: 'miter',
+				pointBorderColor: '{{ color[i] }}',
+				pointBackgroundColor: "#fff",
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 1,
+				pointHitRadius: 10,
+				data : [{% for date, value in E12_dados_t[i]["data"] %}
+						{x:"{{ date }}",
+						y: {{value}}},
+					{% endfor %}]
+				}
+				{% if virgula.append('1') %}{% endif %}
 			{% endif %}
-			{
-			fill: false,
-			label: '{{ E12_dados_t[i]["label"] }}',
-			lineTension: 0.1,
-			backgroundColor: '{{ color[i] }}',
-			borderColor: '{{ color[i] }}',
-			borderCapStyle: 'butt',
-			borderDash: [],
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'miter',
-			pointBorderColor: '{{ color[i] }}',
-			pointBackgroundColor: "#fff",
-			pointBorderWidth: 1,
-			pointHoverRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHoverBackgroundColor: '{{ color[i] }}',
-			pointHoverBorderColor: '{{ color[i] }}',
-			pointHoverBorderWidth: 2,
-			pointRadius: 1,
-			pointHitRadius: 10,
-			data : [{% for date, value in E12_dados_t[i]["data"] %}
-					{x:"{{ date }}",
-					y: {{value}}},
-				{% endfor %}]
-			}
-			{% if virgula.append('1') %}{% endif %}
-		{% endif %}
-	{% endfor %}
-    ]
- }
- 
- // get chart canvas
- var ctx = document.getElementById("myChart").getContext("2d");
- var ctx2 = document.getElementById("myChart2").getContext("2d");
- var ctx3 = document.getElementById("myChart3").getContext("2d");
+		{% endfor %}
+		]
+	}
+	
+	// get chart canvas
+	var ctx = document.getElementById("ExpecGrafico").getContext("2d");
+	var ctx2 = document.getElementById("ExpecTop5Grafico").getContext("2d");
+	var ctx3 = document.getElementById("E12Grafico").getContext("2d");
   
- // create the chart using the chart canvas
- var myChart = new Chart(ctx, {
-  type: 'line',
-  data: chartData,
-  options: {
-    scales: {
-      xAxes: [{
-        type: "time",
-        time: {
-          format: 'DD/MM/YYYY',
-          tooltipFormat: 'll'
-        },
-        scaleLabel: {
-          display: true,
-          labelString: 'Date'
-        }
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'value'
-        }
-      }]
-    }
-  }
- });
- var myChart2 = new Chart(ctx2, {
-    type: 'line',
-    data: chart2Data,
- });
- var myChart3 = new Chart(ctx3, {
-    type: 'line',
-    data: chart3Data,
- });
+ 	// create the chart using the chart canvas
+ 	var ExpecGrafico = new Chart(ctx, {
+		type: 'line',
+		data: ExpecGraficoData,
+		options: {
+			scales: {
+			xAxes: [{
+				type: "time",
+				time: {
+					format: 'DD/MM/YYYY',
+					tooltipFormat: 'll'
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'Date'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'value'
+				}
+			}]
+			}
+		}
+	});
+	var ExpecTop5Grafico = new Chart(ctx2, {
+		type: 'line',
+		data: ExpecTop5GraficoData,
+		options: {
+			scales: {
+			xAxes: [{
+				type: "time",
+				time: {
+					format: 'DD/MM/YYYY',
+					tooltipFormat: 'l2'
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'Date'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'value'
+				}
+			}]
+			}
+		}
+	});
+	var E12Grafico = new Chart(ctx3, {
+		type: 'line',
+		data: E12GraficoData,
+		options: {
+			scales: {
+			xAxes: [{
+				type: "time",
+				time: {
+					format: 'DD/MM/YYYY',
+					tooltipFormat: 'l2'
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'Date'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'value'
+				}
+			}]
+			}
+		}
+	});
+
+	{% if not ExpecGraf %}
+		$("#divExpecGrafico").hide();
+	{% endif %}
+	{% if not ExpecTop5Graf %}
+		$("#divExpecTop5Grafico").hide();
+	{% endif %}
+	{% if not E12Graf %}
+		$("#divE12Grafico").hide();
+	{% endif %}
+
 </script>
 {% endblock content %}
 
