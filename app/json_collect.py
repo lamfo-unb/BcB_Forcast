@@ -4,22 +4,22 @@ from pandas.io.json import json_normalize
 
 # --  AGRUPAMENTO 1
 # coleta dados api
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Suavizada,baseCalculo,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Suavizada,baseCalculo,Media,Mediana") as url:
     twelve_months_data = json.loads(url.read().decode())
     
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativaMercadoMensais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativaMercadoMensais?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
     monthly_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=100&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTrimestrais?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,DataReferencia,Media,Mediana") as url:
     quarterly_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,IndicadorDetalhe,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,IndicadorDetalhe,Data,DataReferencia,baseCalculo,Media,Mediana") as url:
     annual_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTop5Anuais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,tipoCalculo,DataReferencia,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTop5Anuais?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,tipoCalculo,DataReferencia,Media,Mediana") as url:
     top_5_anual_data = json.loads(url.read().decode())
 
-with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTop5Mensais?$top=1000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,tipoCalculo,DataReferencia,Media,Mediana") as url:
+with urllib.request.urlopen("https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoTop5Mensais?$top=10000&$orderby=Data%20desc&$format=json&$select=Indicador,Data,tipoCalculo,DataReferencia,Media,Mediana") as url:
     top_5_monthly_data = json.loads(url.read().decode())
 
 indicadores = pd.DataFrame.from_dict(list([{'Conjunto': 'Inflação', 'IndiNome':'IGP-DI'},

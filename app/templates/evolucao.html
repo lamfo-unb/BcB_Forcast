@@ -1,0 +1,300 @@
+{% extends "base_site.html" %}
+
+{% block title %} Plain Page {% endblock title %}
+
+{% block stylesheets %}
+	{{ super() }}
+{% endblock stylesheets %}
+
+{% block content %}
+<head>
+	<meta charset="utf-8" />
+	<!-- import plugin script -->
+	<!-- <script src='static/Chart.min.js'></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+
+<div class="right_col" role="main">
+  
+	<div class="page-title">
+    	<div class="title-left"><h3>{{ConjSelecionado}}</h3></div>
+  	</div>
+    <br />
+
+    <div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="dashboard_graph x_panel">
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>Filtros</h3>
+					</div>
+				</div>
+				<div class="x_content">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<form method='POST'>
+							<div class="btn-group">
+								<label>Conjunto </label>
+								<select name="ConjSelecionado" id="ConjSelecionado">
+									{% for x in ConjIndicadores %}
+										{% if ConjSelecionado == x %}
+											<option value="{{ x }}" selected>{{ x }}</option>
+										{% else %}	
+											<option value="{{ x }}">{{ x }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+
+							<div class="btn-group">
+								<label>Indicador</label>
+								<select name="IndSelecionado" id="IndSelecionado">
+									<option value="" disabled>Selecione</option>
+									{% for x in Indicadores %}
+										{% if IndSelecionado == x %}
+											<option value="{{ x }}" selected>{{ x }}</option>
+										{% else %}	
+											<option value="{{ x }}">{{ x }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+							<select name="DataSelecionada" id="DataSelecionada" multiple>
+								{% for x in DataSelect %}
+									{% if IndSelecionado == x %}
+										<option value="{{ x }}" selected>{{ x }}</option>
+									{% else %}	
+										<option value="{{ x }}">{{ x }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							<input type="submit">
+						</form>
+					</div>
+				</div>
+        	</div>
+      	</div>
+	</div>
+	<div class="row" id="divExpecGrafico">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="dashboard_graph x_panel">
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>EXPECTATIVA DE MERCADO</h3><h5>Referente a {{ IndSelecionado }}</h5>
+					</div>
+				</div>
+				<div class="x_content">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<canvas id="ExpecGrafico" width="800" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>  
+	</div>
+    <div class="row" id="divExpecTop5Grafico">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          	<div class="dashboard_graph x_panel">
+            	<div class="row x_title">
+              		<div class="col-md-6">
+                		<h3>TOP 5</h3><h5>Referente a {{ IndSelecionado }}</h5>
+              		</div>
+            	</div>
+            	<div class="x_content">
+              		<div class="col-md-12 col-sm-12 col-xs-12">
+                		<canvas id="ExpecTop5Grafico" width="800" height="400"></canvas>
+              		</div>
+            	</div>
+          	</div>
+        </div>  
+    </div>
+</div>
+
+<script>
+	 $(function() {
+		$('#ConjSelecionado').change(function() {
+			var ConjSel = $('#ConjSelecionado').val();
+			$.post('/GetIndicadores', {'ConjSelecionado': ConjSel},
+				function(data) {
+					$('#IndSelecionado option').remove();
+					
+					$.each(data, function(key, value){
+						$('#IndSelecionado').append('<option value=' + value + '>' + value + '</option>');
+					});
+				}, 'json');
+			return false;
+		});
+
+		$('#IndSelecionado').change(function() {
+			var IndiSel = $('#IndSelecionado').val();
+			$.post('/GetDatas', {'IndSelecionado': IndiSel},
+				function(data) {
+					$('#DataSelecionada option').remove();
+					
+					$.each(data, function(key, value){
+						$('#DataSelecionada').append('<option value=' + value + '>' + value + '</option>');
+					});
+				}, 'json');
+			return false;
+		});
+	});
+
+	// Global parameters:
+	// do not resize the chart canvas when its container does (keep at 600x400px)
+	Chart.defaults.global.responsive = true;
+
+	// define the chart data
+	var ExpecGraficoData = {
+		datasets : [
+		{% set virgula = [] %}
+		{% for i in data_list %}
+			{% if expec_dados_t[i]["data"] %}	
+				{% if virgula != [] %}
+					,
+				{% endif %}
+				{
+				fill: false,
+				label: '{{ expec_dados_t[i]["label"] }}',
+				lineTension: 0.1,
+				backgroundColor: '{{ color[i] }}',
+				borderColor: '{{ color[i] }}',
+				borderCapStyle: 'butt',
+				borderDash: [],
+				borderDashOffset: 0.0,
+				borderJoinStyle: 'miter',
+				pointBorderColor: '{{ color[i] }}',
+				pointBackgroundColor: "#fff",
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHitRadius: 10,
+				data : [{% for date, value in expec_dados_t[i]["data"] %}
+						{x:"{{ date }}",
+						y: {{value}}},
+					{% endfor %}]
+				}
+				{% if virgula.append('1') %}{% endif %}
+			{% endif %}
+		{% endfor %}
+		]
+	}
+	var ExpecTop5GraficoData = {
+		datasets : [
+		{% set virgula = [] %}
+		{% for i in data_list %}
+			{% if top5_dados_t[i]["data"] %}		
+				{% if virgula != [] %}
+					,
+				{% endif %}
+				{
+				fill: false,
+				label: '{{ top5_dados_t[i]["label"] }}',
+				lineTension: 0.1,
+				backgroundColor: '{{ color[i] }}',
+				borderColor: '{{ color[i] }}',
+				borderCapStyle: 'butt',
+				borderDash: [],
+				borderDashOffset: 0.0,
+				borderJoinStyle: 'miter',
+				pointBorderColor: '{{ color[i] }}',
+				pointBackgroundColor: "#fff",
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHoverBackgroundColor: '{{ color[i] }}',
+				pointHoverBorderColor: '{{ color[i] }}',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHitRadius: 10,
+				data : [{% for date, value in top5_dados_t[i]["data"] %}
+						{x:"{{ date }}",
+						y: {{value}}},
+					{% endfor %}]
+				}
+				{% if virgula.append('1') %}{% endif %}
+			{% endif %}
+		{% endfor %}
+		]
+	}
+	
+	// get chart canvas
+	var ctx = document.getElementById("ExpecGrafico").getContext("2d");
+	var ctx2 = document.getElementById("ExpecTop5Grafico").getContext("2d");
+  
+ 	// create the chart using the chart canvas
+ 	var ExpecGrafico = new Chart(ctx, {
+		type: 'line',
+		data: ExpecGraficoData,
+		options: {
+			scales: {
+			xAxes: [{
+				type: "time",
+				time: {
+					format: 'DD/MM/YYYY',
+					tooltipFormat: 'll'
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'Date'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'value'
+				}
+			}]
+			}
+		}
+	});
+	var ExpecTop5Grafico = new Chart(ctx2, {
+		type: 'line',
+		data: ExpecTop5GraficoData,
+		options: {
+			scales: {
+			xAxes: [{
+				type: "time",
+				time: {
+					format: 'DD/MM/YYYY',
+					tooltipFormat: 'l2'
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'Date'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'value'
+				}
+			}]
+			}
+		}
+	});
+
+	{% if not ExpecGraf %}
+		$("#divExpecGrafico").hide();
+	{% endif %}
+	{% if not ExpecTop5Graf %}
+		$("#divExpecTop5Grafico").hide();
+	{% endif %}
+
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+{% endblock javascripts %}
+
