@@ -70,6 +70,20 @@
 									{% endif %}
 								{% endfor %}
 							</select>
+							<div class="btn-group">
+								<label>Tipo Calculo</label>
+								<select name="TipoCalculo" id="TipoCalculo">
+									<option value="C"
+									{% if TipoCalculo == 'C' %}selected="selected"{% endif %}
+										>Curto Prazo</option>
+									<option value="M"
+									{% if TipoCalculo == 'M' %}selected="selected"{% endif %}
+										>Medio Prazo</option>
+									<option value="L"
+									{% if TipoCalculo == 'L' %}selected="selected"{% endif %}
+										>Longo Prazo</option>
+								</select>
+							</div>
 							<input type="submit">
 						</form>
 					</div>

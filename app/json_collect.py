@@ -105,10 +105,14 @@ expec_data.loc[expec_data['IndicadorDetalhe'].notnull(),'IndiNome'] = expec_data
 
 expec_data['DataReferencia'] = pd.to_datetime(expec_data['DataReferencia'])
 
+for i in expec_data['IndiNome'].sort_values().unique():
+	for d in expec_data[expec_data['Fonte'] == 'Mensal'][expec_data['IndiNome'] == i]["Data"].sort_values().unique():
+		ultdatamensal = expec_data[expec_data['Data'] == d][expec_data['IndiNome'] == i][expec_data['Fonte'] == 'Mensal']['DataReferencia'].sort_values().unique()[-1]
+		expec_data = expec_data.drop(expec_data[expec_data['Data'] == d][expec_data['IndiNome'] == i][expec_data['Fonte'] == 'Anual'][expec_data['DataReferencia'] < ultdatamensal].index)
+
 expec_data.drop(['Indicador','IndicadorDetalhe','Fonte','baseCalculo'], axis=1, inplace=True)
 
 expec_data = expec_data.reset_index(drop=True)
-
 
 # TOP 5 DATA limpeza e preparo de dados 
 top_5_anual_df['Fonte'] = 'Anual'
@@ -124,6 +128,11 @@ top_5_data = top_5_data.reset_index(drop=True)
 top_5_data['IndiNome'] = top_5_data['Indicador']
 
 top_5_data['DataReferencia'] = pd.to_datetime(top_5_data['DataReferencia'])
+
+# for i in top_5_data['IndiNome'].sort_values().unique():
+# 	for d in top_5_data[top_5_data['Fonte'] == 'Mensal'][top_5_data['IndiNome'] == i]["Data"].sort_values().unique():
+# 		ultdatamensal = top_5_data[top_5_data['Data'] == d][top_5_data['IndiNome'] == i][top_5_data['Fonte'] == 'Mensal']['DataReferencia'].sort_values().unique()[-1]
+# 		top_5_data = top_5_data.drop(top_5_data[top_5_data['Data'] == d][top_5_data['IndiNome'] == i][top_5_data['Fonte'] == 'Anual'][top_5_data['DataReferencia'] < ultdatamensal].index)
 
 top_5_data.drop(['Indicador','Fonte'], axis=1, inplace=True)
 

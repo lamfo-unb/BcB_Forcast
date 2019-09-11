@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import json_collect 
 import pandas as pd
+import random as rd
 
 app = Flask(__name__)
 
@@ -68,10 +69,10 @@ def home():
 
 @app.route('/evolucao', methods=['POST','GET'])
 def evolucao():
-	color = ['#d32f2f', 'rgba(75,192,192,1)', '#7b1fa2', '#303f9f', '#0288d1', '#fbc02d', '#f57c00', '#616161']
 
 	ConjSelecionado = 'Inflação' if request.form.get('ConjSelecionado') == None else request.form.get('ConjSelecionado')
 	IndSelecionado = 'IPCA' if request.form.get('IndSelecionado') == None else request.form.get('IndSelecionado')
+	TipoCalculo = 'C' if request.form.get('TipoCalculo') == None else request.form.get('TipoCalculo')
 	
 	DataSelect = []
 	DataSelect.extend(json_collect.expec_data[json_collect.expec_data['IndiNome'] == IndSelecionado]["Data"].sort_values().unique())
@@ -90,6 +91,7 @@ def evolucao():
 	data_list = []
 	ExpecGraf = False
 	ExpecTop5Graf = False
+	color = []
 
 	i=0
 	for DtSel in DataSelecionada:
@@ -103,16 +105,21 @@ def evolucao():
 			ExpecGraf = True
 
 		# EXPECTATIVA TOP_5
-		indi_top5_labels = json_collect.top_5_data[json_collect.top_5_data['Data'] == DtSel][json_collect.top_5_data['IndiNome'] == IndSelecionado].sort_values(by=['DataReferencia'])['DataReferencia'].dt.strftime("%d/%m/%Y")
-		indi_top5_values = json_collect.top_5_data[json_collect.top_5_data['Data'] == DtSel][json_collect.top_5_data['IndiNome'] == IndSelecionado].sort_values(by=['DataReferencia'])['Media']
+		indi_top5_labels = json_collect.top_5_data[json_collect.top_5_data['Data'] == DtSel][json_collect.top_5_data['IndiNome'] == IndSelecionado][json_collect.top_5_data['tipoCalculo'] == TipoCalculo].sort_values(by=['DataReferencia'])['DataReferencia'].dt.strftime("%d/%m/%Y")
+		indi_top5_values = json_collect.top_5_data[json_collect.top_5_data['Data'] == DtSel][json_collect.top_5_data['IndiNome'] == IndSelecionado][json_collect.top_5_data['tipoCalculo'] == TipoCalculo].sort_values(by=['DataReferencia'])['Media']
 		top5_dados_t.extend([{'label':DtSel, 'data': list(zip(indi_top5_labels,indi_top5_values))}])
 
 		if not indi_top5_values.empty:
 			ExpecTop5Graf = True
 
+		r = lambda: rd.randint(0,255)
+		g = lambda: rd.randint(0,255)
+		b = lambda: rd.randint(0,255)
+		color.append(str('rgba(' + str(r()) + ',' + str(g()) + ',' + str(b()) + ',1)'))
+
 		i = i +1
 	return render_template('evolucao.html', DataSelect = DataSelect, ConjIndicadores = ConjIndicadores, Indicadores = Indicadores,
-					DataSelecionada = DataSelecionada, ConjSelecionado = ConjSelecionado, IndSelecionado = IndSelecionado,
+					DataSelecionada = DataSelecionada, ConjSelecionado = ConjSelecionado, IndSelecionado = IndSelecionado, TipoCalculo = TipoCalculo,
 					data_list = data_list, color = color,
 					ExpecGraf = ExpecGraf, expec_dados_t = expec_dados_t,
 					ExpecTop5Graf = ExpecTop5Graf, top5_dados_t = top5_dados_t)
