@@ -34,27 +34,44 @@
 				</div>
 				<div class="x_content">
 					<div class="col-md-12 col-sm-12 col-xs-12">
-						<div class="btn-group">
-							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Data da previsão
-								<span class="caret"></span>
-							</button>
-							<ul role="menu" class="dropdown-menu">
+						<form method='POST'>
+							<div class="btn-group">
+								<label>Conjunto </label>
+								<select name="ConjSelecionado" id="ConjSelecionado">
+									{% for x in ConjIndicadores %}
+										{% if ConjSelecionado == x %}
+											<option value="{{ x }}" selected>{{ x }}</option>
+										{% else %}	
+											<option value="{{ x }}">{{ x }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+							<select name="DataSelecionada" id="DataSelecionada">
 								{% for x in DataSelect %}
-									<li><a href="http://127.0.0.1:5000/?DataSelecionada={{ x }}&ConjSelecionado={{ConjSelecionado}}">{{ x }}</a></li>
+									{% if IndSelecionado == x %}
+										<option value="{{ x }}" selected>{{ x }}</option>
+									{% else %}	
+										<option value="{{ x }}">{{ x }}</option>
+									{% endif %}
 								{% endfor %}
-							</ul>
-						</div>
-
-						<div class="btn-group">
-							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="false">Conjunto
-								<span class="caret"></span>
-							</button>
-							<ul role="menu" class="dropdown-menu">
-								{% for x in ConjIndicadores %}
-									<li><a href="http://127.0.0.1:5000/?DataSelecionada={{DataSelecionada}}&ConjSelecionado={{ x }}">{{ x }}</a></li>
-								{% endfor %}
-							</ul>
-						</div>
+							</select>
+							<div class="btn-group">
+								<label>Tipo Calculo</label>
+								<select name="TipoCalculo" id="TipoCalculo">
+									<option value="C"
+									{% if TipoCalculo == 'C' %}selected="selected"{% endif %}
+										>Curto Prazo</option>
+									<option value="M"
+									{% if TipoCalculo == 'M' %}selected="selected"{% endif %}
+										>Medio Prazo</option>
+									<option value="L"
+									{% if TipoCalculo == 'L' %}selected="selected"{% endif %}
+										>Longo Prazo</option>
+								</select>
+							</div>
+							<input type="submit">
+						</form>
 					</div>
 				</div>
         	</div>

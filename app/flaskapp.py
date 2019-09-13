@@ -6,7 +6,7 @@ import random as rd
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['POST','GET'])
 def home():
 	color = ['#d32f2f', 'rgba(75,192,192,1)', '#7b1fa2', '#303f9f', '#0288d1', '#fbc02d', '#f57c00', '#616161']
 	# expec dataset values:
@@ -19,9 +19,10 @@ def home():
 	
 	ConjIndicadores = json_collect.indicadores['Conjunto'].unique()
 
-	DataSelecionada = DataSelect[-1] if request.args.get('DataSelecionada') == None else request.args.get('DataSelecionada')
-	ConjSelecionado = 'Inflação' if request.args.get('ConjSelecionado') == None else request.args.get('ConjSelecionado')
-
+	DataSelecionada = DataSelect[-1] if request.form.get('DataSelecionada') == None else request.form.get('DataSelecionada')
+	ConjSelecionado = 'Inflação' if request.form.get('ConjSelecionado') == None else request.form.get('ConjSelecionado')
+	TipoCalculo = 'C' if request.form.get('TipoCalculo') == None else request.form.get('TipoCalculo')
+	
 	indicadores = json_collect.indicadores[json_collect.indicadores['Conjunto'] == ConjSelecionado]['IndiNome'].unique()
 
 	expec_dados_t = []
@@ -44,8 +45,8 @@ def home():
 			ExpecGraf = True
 
 		# EXPECTATIVA TOP_5
-		indi_top5_labels = json_collect.top_5_data[json_collect.top_5_data['Data'] == DataSelecionada][json_collect.top_5_data['IndiNome'] == indi].sort_values(by=['DataReferencia'])['DataReferencia'].dt.strftime("%d/%m/%Y")
-		indi_top5_values = json_collect.top_5_data[json_collect.top_5_data['Data'] == DataSelecionada][json_collect.top_5_data['IndiNome'] == indi].sort_values(by=['DataReferencia'])['Media']
+		indi_top5_labels = json_collect.top_5_data[json_collect.top_5_data['Data'] == DataSelecionada][json_collect.top_5_data['IndiNome'] == indi][json_collect.top_5_data['tipoCalculo'] == TipoCalculo].sort_values(by=['DataReferencia'])['DataReferencia'].dt.strftime("%d/%m/%Y")
+		indi_top5_values = json_collect.top_5_data[json_collect.top_5_data['Data'] == DataSelecionada][json_collect.top_5_data['IndiNome'] == indi][json_collect.top_5_data['tipoCalculo'] == TipoCalculo].sort_values(by=['DataReferencia'])['Media']
 		top5_dados_t.extend([{'label':indi, 'data': list(zip(indi_top5_labels,indi_top5_values))}])
 
 		if not indi_top5_values.empty:
@@ -62,9 +63,12 @@ def home():
 		i = i +1
 
 
-	return render_template('comparativo.html', DataSelect = DataSelect, ConjIndicadores = ConjIndicadores, DataSelecionada = DataSelecionada, ConjSelecionado = ConjSelecionado, color = color, 
-						indicadores_list = indicadores_list, expec_dados_t = expec_dados_t, top5_dados_t = top5_dados_t, E12_dados_t = E12_dados_t, 
-						ExpecGraf = ExpecGraf, ExpecTop5Graf = ExpecTop5Graf, E12Graf = E12Graf)
+	return render_template('comparativo.html', DataSelect = DataSelect, ConjIndicadores = ConjIndicadores, 
+						DataSelecionada = DataSelecionada, ConjSelecionado = ConjSelecionado, 
+						indicadores_list = indicadores_list, TipoCalculo = TipoCalculo, color = color, 
+						expec_dados_t = expec_dados_t, ExpecGraf = ExpecGraf, 
+						top5_dados_t = top5_dados_t, ExpecTop5Graf = ExpecTop5Graf, 
+						E12_dados_t = E12_dados_t, E12Graf = E12Graf)
 
 
 @app.route('/evolucao', methods=['POST','GET'])
